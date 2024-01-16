@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+input.input-error {
+  border-color: red;
+}
+p.error {
+  margin: 0;
+  font-size: 8px;
+  color: red;
+}
