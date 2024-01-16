@@ -1,50 +1,62 @@
-import "./App.css";
-import React, { useState, useRef } from "react";
+import { useState } from "react";
+import { useFormik } from "formik";
 import Email from "./Email";
 import Feedback from "./Feedback";
+import * as yup from "yup";
+import emailjs from "@emailjs/browser";
 
-function App() {
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [isSubmit, setIsSubmit] = useState(false);
-  const [picked, setPicked] = useState("");
-  const [textarea, setTextarea] = useState("");
+const validationSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+});
 
-  const handleEmailSubmit = (submittedEmail, submittedName) => {
-    setEmail(submittedEmail);
-    setUserName(submittedName);
-    setIsSubmit(true);
-  };
-  const handleChange = (pic, area) => {
-    setPicked(pic);
-    setTextarea(area);
+export default function App() {
+  const [isSubmitForm, setIsSubmitForm] = useState(false);
+
+  const handleNextForm = () => {
+    setIsSubmitForm(true);
   };
 
-  const handlePrevClick = () => {
-    setIsSubmit(false);
+  const handleOnPrevClick = () => {
+    setIsSubmitForm(false);
   };
+
+  const handleSubmit = (values) => {
+    console.log(values);
+
+    emailjs
+      .send("service_mmvo0dg", "template_1cpkkd8", values, "NVme4gBt6AEpzhi4s")
+      .then(
+        (result) => {
+          console.log(result.text);
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      picked: "unhappy",
+      email: "",
+      name: "",
+      textarea: "",
+    },
+    validateOnChange: true,
+    validationSchema: validationSchema,
+    onSubmit: handleSubmit,
+  });
+
   return (
     <div className="App">
       <>
-        {!isSubmit ? (
-          <Email
-            onEmailSubmit={handleEmailSubmit}
-            email={email}
-            name={userName}
-          />
+        {!isSubmitForm ? (
+          <Email formik={formik} onNextFormClick={handleNextForm} />
         ) : (
-          <Feedback
-            picked={picked}
-            textarea={textarea}
-            name={userName}
-            email={email}
-            handleChange={handleChange}
-            onPrevClick={handlePrevClick}
-          />
+          <Feedback formik={formik} onPrevClick={handleOnPrevClick} />
         )}
       </>
     </div>
   );
 }
-
-export default App;
