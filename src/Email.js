@@ -20,10 +20,11 @@ const CustomInput = ({ ...props }) => {
 export default function Email({ formik, onNextFormClick }) {
   return (
     <FormikProvider value={formik}>
-      <Form>
+      <Form className="mt-10">
         <CustomInput type="text" name="name" placeholder="user name..." />
         <CustomInput type="text" name="email" placeholder="email..." />
         <button
+          className="mr-4 rounded  w-1/6 bg-orange-200 shadow-[0px_3px_8px_rgba(0,0,0,0.24)]"
           onClick={
             !formik.errors.name && !formik.errors.email
               ? onNextFormClick

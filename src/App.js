@@ -1,3 +1,5 @@
+import "./index.css";
+import "./App.css";
 import { useState } from "react";
 import { useFormik } from "formik";
 import Email from "./Email";
